@@ -1,0 +1,145 @@
+{
+  "header": {
+    "home": "Home",
+    "specialties": "Especialidades",
+    "subscriptions": "Assinaturas",
+    "login": "Login",
+    "myAccount": "Minha Conta",
+    "logout": "Sair"
+  },
+  "home": {
+    "hero": {
+      "title": "Bem-estar ao seu alcance",
+      "subtitle": "Conecte-se com especialistas através de avatares de IA para cuidar da sua saúde mental e física",
+      "cta": "Assinar agora"
+    },
+    "specialties": {
+      "title": "Nossas Especialidades",
+      "subtitle": "Encontre o suporte que você precisa"
+    },
+    "howItWorks": {
+      "title": "Como funciona",
+      "step1": {
+        "title": "Escolha sua especialidade",
+        "description": "Selecione o tipo de atendimento que você precisa"
+      },
+      "step2": {
+        "title": "Conecte-se com um avatar",
+        "description": "Converse com um especialista através de nossos avatares de IA"
+      },
+      "step3": {
+        "title": "Receba orientação personalizada",
+        "description": "Obtenha suporte e acompanhamento contínuo"
+      }
+    },
+    "testimonials": {
+      "title": "O que nossos usuários dizem"
+    },
+    "faq": {
+      "title": "Perguntas Frequentes"
+    }
+  },
+  "specialties": {
+    "title": "Especialidades",
+    "filterAll": "Todas",
+    "selectAvatar": "Selecionar Avatar"
+  },
+  "subscriptions": {
+    "title": "Planos de Assinatura",
+    "subtitle": "Escolha o plano ideal para você",
+    "essential": {
+      "name": "Essencial",
+      "price": "R$ 49,90/mês",
+      "features": [
+        "3 atendimentos por mês",
+        "Acesso a especialidades básicas",
+        "Histórico de atendimentos"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "R$ 99,90/mês",
+      "features": [
+        "Atendimentos ilimitados",
+        "Acesso a todas especialidades",
+        "Histórico completo",
+        "Prioridade no atendimento"
+      ],
+      "popular": "Mais Popular"
+    },
+    "enterprise": {
+      "name": "Empresarial",
+      "price": "Sob consulta",
+      "features": [
+        "Planos personalizados",
+        "Gestão de equipes",
+        "Relatórios e analytics",
+        "Suporte dedicado"
+      ]
+    },
+    "subscribe": "Assinar"
+  },
+  "login": {
+    "title": "Acesse sua conta",
+    "signIn": "Entrar",
+    "signUp": "Criar conta",
+    "email": "E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar senha",
+    "name": "Nome completo",
+    "forgotPassword": "Esqueceu a senha?",
+    "noAccount": "Não tem uma conta?",
+    "hasAccount": "Já tem uma conta?",
+    "signInButton": "Entrar",
+    "signUpButton": "Criar conta",
+    "errors": {
+      "emailRequired": "E-mail é obrigatório",
+      "emailInvalid": "E-mail inválido",
+      "passwordRequired": "Senha é obrigatória",
+      "passwordMin": "Senha deve ter no mínimo 6 caracteres",
+      "passwordMatch": "As senhas não coincidem",
+      "nameRequired": "Nome é obrigatório"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo(a)",
+    "planStatus": "Status do Plano",
+    "availableAvatars": "Avatares Disponíveis",
+    "attendNow": "Atender agora",
+    "history": "Histórico de Atendimentos",
+    "mySubscription": "Minha Assinatura",
+    "noHistory": "Você ainda não tem atendimentos",
+    "date": "Data",
+    "specialty": "Especialidade",
+    "avatar": "Avatar",
+    "duration": "Duração",
+    "status": "Status"
+  },
+  "footer": {
+    "about": "Sobre",
+    "privacy": "Privacidade",
+    "terms": "Termos de Uso",
+    "contact": "Contato",
+    "rights": "Todos os direitos reservados"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "A página que você está procurando não existe.",
+    "backHome": "Voltar para Home"
+  },
+  "errors": {
+    "configMissing": "Configure {{variable}} no arquivo .env",
+    "loadingError": "Erro ao carregar dados",
+    "networkError": "Erro de conexão. Tente novamente."
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar"
+  }
+}
