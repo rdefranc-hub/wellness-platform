@@ -1,0 +1,57 @@
+name: Deploy Wellness (HostGator FTP)
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm ci || npm install --legacy-peer-deps
+
+      - name: Build (try scripts, then vite)
+        run: |
+          if npm run -s build; then
+            echo "Build via npm run build"
+          else
+            npx vite build
+          fi
+
+      - name: Detect build output folder
+        shell: bash
+        run: |
+          if [ -f "dist/index.html" ]; then
+            echo "LOCAL_DIR=dist" >> $GITHUB_ENV
+          elif [ -f "client/dist/index.html" ]; then
+            echo "LOCAL_DIR=client/dist" >> $GITHUB_ENV
+          elif [ -f "server/_core/public/index.html" ]; then
+            echo "LOCAL_DIR=server/_core/public" >> $GITHUB_ENV
+          else
+            echo "Nenhum index.html encontrado após o build"; exit 1
+          fi
+          echo "Usando pasta: ${{ env.LOCAL_DIR }}"
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: /public_html/wellness
+          local-dir: ${{ env.LOCAL_DIR }}
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/*.map
