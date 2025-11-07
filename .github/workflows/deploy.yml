@@ -24,7 +24,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          check-latest: true
+
 
       # Instala sem auditoria, sem doações e SEM scripts de pós-instalação
       # para não travar o job (não precisamos de postinstall para build do Vite).
