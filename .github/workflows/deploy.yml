@@ -2,7 +2,7 @@ name: Deploy Wellness (HostGator FTP)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -21,23 +21,22 @@ jobs:
           check-latest: true
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund --ignore-scripts --legacy-peer-deps
+        run: npm install --no-audit --no-fund --ignore-scripts
 
       - name: Build (Vite)
-        env:
-          NODE_OPTIONS: --max-old-space-size=2048
         run: npm run build
 
       - name: Deploy via FTP (HostGator)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           security: loose
           local-dir: client/dist/
           server-dir: public_html/wellness/
+          dangerous-clean-slate: true
           exclude: |
             **/.git*
             **/.DS_Store
