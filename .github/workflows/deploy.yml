@@ -3,12 +3,6 @@ name: Deploy Wellness (HostGator FTP)
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'client/**'
-      - 'shared/**'
-      - 'vite.config.ts'
-      - 'package.json'
-      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 jobs:
@@ -20,15 +14,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node 18
+      - name: Use Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           check-latest: true
 
-
-      # Instala sem auditoria, sem doações e SEM scripts de pós-instalação
-      # para não travar o job (não precisamos de postinstall para build do Vite).
       - name: Install dependencies
         run: npm install --no-audit --no-fund --ignore-scripts --legacy-peer-deps
 
