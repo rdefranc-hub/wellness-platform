@@ -1,21 +1,23 @@
 // vite.config.ts
-import react from "@vitejs/plugin-react"
-import tailwindcss from "@tailwindcss/vite"
-import { defineConfig } from "vite"
-import { vitePluginManusRuntime } from "vite-plugin-manus-runtime"
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig } from "vite";
+import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
-import path from "node:path"
-import { fileURLToPath } from "node:url"
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  // como o site roda em /wellness/
+  // o site será servido em /wellness/
   base: "/wellness/",
 
+  // plugins necessários
   plugins: [react(), tailwindcss(), vitePluginManusRuntime()],
 
+  // atalhos de import
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
@@ -27,18 +29,18 @@ export default defineConfig({
     },
   },
 
+  // o projeto front roda a partir de client/
   root: path.resolve(__dirname, "client"),
   publicDir: path.resolve(__dirname, "client", "public"),
 
+  // saída do build (fica em client/dist) — é isso que o deploy envia
   build: {
-    outDir: path.resolve(__dirname, "server", "_core", "public"),
+    outDir: "dist",
     emptyOutDir: true,
-    // *** força tudo ficar em /assets ***
     assetsDir: "assets",
-    // (opcional) garante nomeação padrão, pode manter ausente se quiser
-    // cssCodeSplit: true,
   },
 
+  // dev server (local)
   server: {
     host: true,
     port: 5173,
@@ -53,4 +55,4 @@ export default defineConfig({
     ],
     fs: { strict: true, deny: ["**/.*"] },
   },
-})
+});
