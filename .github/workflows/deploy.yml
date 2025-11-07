@@ -2,12 +2,13 @@ name: Deploy Wellness (HostGator FTP)
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+  workflow_dispatch:  # <-- Isto habilita o botão "Run workflow"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,21 +16,32 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
-      - name: Build project
+      - name: Build (Vite)
         run: npm run build
+
+      - name: Detect build output folder
+        id: detect
+        run: |
+          if [ -d "client/dist" ]; then
+            echo "local=client/dist/" >> $GITHUB_OUTPUT
+          elif [ -d "server/_core/public" ]; then
+            echo "local=server/_core/public/" >> $GITHUB_OUTPUT
+          else
+            echo "local=client/dist/" >> $GITHUB_OUTPUT
+          fi
+          echo "Using local-dir: $(cat $GITHUB_OUTPUT)"
 
       - name: Deploy via FTP (HostGator)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USER }}
-          password: ${{ secrets.FTP_PASS }}
-          protocol: ftp
-          local-dir: server/_core/public/
-          server-dir: /public_html/wellness/
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ${{ steps.detect.outputs.local }}
+          server-dir: public_html/wellness/
           dangerous-clean-slate: false
