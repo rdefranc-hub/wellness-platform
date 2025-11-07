@@ -1,41 +1,40 @@
-// vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import path from 'path';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+// Root is client/ so builds go to client/dist when outDir is 'dist'.
+// base is set so final site works at https://clubedavida.online/wellness/
 export default defineConfig({
-  // app vive dentro de client/
   root: path.resolve(__dirname, 'client'),
   base: '/wellness/',
   plugins: [react()],
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    assetsDir: 'assets',
-  },
   resolve: {
     alias: {
-      // aliases internos do client
       '@': path.resolve(__dirname, 'client', 'src'),
       '@components': path.resolve(__dirname, 'client', 'src', 'components'),
       '@pages': path.resolve(__dirname, 'client', 'src', 'pages'),
       '@lib': path.resolve(__dirname, 'client', 'src', 'lib'),
       '@assets': path.resolve(__dirname, 'client', 'src', 'assets'),
-
-      // ALIAS QUE FALTAVA (pasta compartilhada na raiz)
       '@shared': path.resolve(__dirname, 'shared'),
 
-      // shims que já criamos para não quebrar o bundle
-      'wouter': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'wouter.ts'),
+      // shims
       '@tanstack/react-query': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'react-query.ts'),
       '@trpc/react-query': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts'),
       '@trpc/client': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts'),
       '@trpc/server': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts'),
+      'wouter': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'wouter.ts'),
       'superjson': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'superjson.ts'),
     },
+  },
+  build: {
+    // outDir is relative to root (client), so this produces client/dist
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, 'client', 'index.html'),
+    },
+  },
+  server: {
+    port: 5173,
   },
 });
