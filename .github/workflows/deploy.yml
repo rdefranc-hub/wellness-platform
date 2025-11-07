@@ -17,26 +17,23 @@ jobs:
         with:
           node-version: '20'
 
-      # Instala e compila o FRONT (dentro de client)
-      - name: Install deps
+      - name: Install dependencies
         working-directory: client
         run: npm ci
 
-      - name: Build
+      - name: Build project
         working-directory: client
         run: npm run build
 
-      # Publica os artefatos gerados em client/dist/ para a raiz do FTP do usuário
-      - name: Deploy via FTP
+      - name: Deploy via FTP (HostGator)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}      # ex.: sh-pro00166.hostgator.com.br
-          username: ${{ secrets.FTP_USER }}    # o usuário FTP que já “entra” em /public_html/wellness
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          # >>> AQUI ESTÁ O PULO DO GATO <<<
-          server-dir: /                        # raiz do usuário (que já é /public_html/wellness)
-          local-dir: client/dist/              # onde o Vite gera o index.html após o build
           protocol: ftps
           port: 21
+          local-dir: client/dist/
+          server-dir: /
+          dangerous-clean-slate: true
           state-name: .ftp-deploy-sync-state.json
-          dangerous-clean-slate: true          # limpa a pasta remota antes de enviar
