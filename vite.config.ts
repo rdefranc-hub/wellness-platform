@@ -12,6 +12,9 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig({
+  // *** IMPORTANTE: como o site roda em /wellness, avise ao Vite ***
+  base: "/wellness/",
+
   plugins: [
     react(),
     tailwindcss(),
