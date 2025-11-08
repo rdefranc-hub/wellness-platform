@@ -48,17 +48,20 @@ jobs:
         id: dist
         shell: bash
         run: |
-          DIST="${{ steps.proj.outputs.workdir }}/dist"
-          echo "Procurando: $DIST"
-          if [ -d "$DIST" ]; then
-            echo "dir=$DIST" >> "$GITHUB_OUTPUT"
-            echo "OK: build encontrado em $DIST"
+          # Try workdir/dist first, then client/dist (for Vite projects with root: client/)
+          if [ -d "${{ steps.proj.outputs.workdir }}/dist" ]; then
+            DIST="${{ steps.proj.outputs.workdir }}/dist"
+          elif [ -d "client/dist" ]; then
+            DIST="client/dist"
           else
-            echo "ERROR: diretório 'dist' não encontrado em $DIST"
-            echo "Listagem do diretório:"
+            echo "ERROR: diretório 'dist' não encontrado"
+            echo "Tentou: ${{ steps.proj.outputs.workdir }}/dist e client/dist"
             ls -la "${{ steps.proj.outputs.workdir }}" || true
+            ls -la client/ || true
             exit 1
           fi
+          echo "dir=$DIST" >> "$GITHUB_OUTPUT"
+          echo "OK: build encontrado em $DIST"
 
       - name: Deploy to HostGator (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
