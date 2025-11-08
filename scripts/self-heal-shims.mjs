@@ -70,4 +70,76 @@ export default SuperJSON;
 
 // --- criar shims se faltarem ---
 ensureDir(shimsDir);
-writeIfMissing(path.join(shimsDir, "trpc.ts"),
+writeIfMissing(path.join(shimsDir, "trpc.ts"), shimTRPC);
+writeIfMissing(path.join(shimsDir, "react-query.ts"), shimReactQuery);
+writeIfMissing(path.join(shimsDir, "wouter.ts"), shimWouter);
+writeIfMissing(path.join(shimsDir, "superjson.ts"), shimSuperjson);
+
+// --- upsert vite.config.ts com root e aliases necessários ---
+const viteTemplate = `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+  root: path.resolve(__dirname, 'client'),
+  base: '/wellness/',
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'client', 'src'),
+      '@lib': path.resolve(__dirname, 'client', 'src', 'lib'),
+      '@shared': path.resolve(__dirname, 'shared'),
+      // build-only shims:
+      '@tanstack/react-query': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'react-query.ts'),
+      '@trpc/react-query': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts'),
+      '@trpc/client': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts'),
+      '@trpc/server': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts'),
+      'wouter': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'wouter.ts'),
+      'superjson': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'superjson.ts'),
+    },
+  },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: path.resolve(__dirname, 'client', 'index.html'),
+    },
+  },
+  server: { port: 5173 },
+});
+`;
+
+// Se o arquivo não existir, cria completo. Se existir, injeta um marcador simples.
+if (!fs.existsSync(viteConfigPath)) {
+  fs.writeFileSync(viteConfigPath, viteTemplate, "utf8");
+  console.log("created:", path.relative(root, viteConfigPath));
+} else {
+  const marker = "'@trpc/client': path.resolve(__dirname, 'client', 'src', 'lib', 'shims', 'trpc.ts')";
+  upsertFileContains(viteConfigPath, marker, viteTemplate);
+}
+
+// --- tsconfig do client (para editores/tsc entenderem paths) ---
+const tsconfigClient = `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["DOM", "ES2022"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@lib/*": ["src/lib/*"],
+      "@shared/*": ["../shared/*"]
+    }
+  },
+  "include": ["src"]
+}
+`;
+writeIfMissing(tsconfigClientPath, tsconfigClient);
+
+console.log("self-heal complete");
