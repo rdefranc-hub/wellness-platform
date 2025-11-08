@@ -6,7 +6,7 @@ import path from 'path';
 // Base /wellness/ garante que os assets sejam servidos corretamente no HostGator
 export default defineConfig({
   root: path.resolve(__dirname, 'client'),
-  base: '//',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -27,7 +27,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: path.resolve(__dirname, 'client', 'dist'),
+    outDir: 'dist',
     emptyOutDir: true,
   },
 });
