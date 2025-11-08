@@ -1,0 +1,21 @@
+// Minimal shim for @radix-ui/react-aspect-ratio.
+export const Root = (props: any) => props?.children ?? null;
+export const Trigger = (props: any) => props?.children ?? null;
+export const Content = (props: any) => props?.children ?? null;
+export const Item = (props: any) => props?.children ?? null;
+export const Group = (props: any) => props?.children ?? null;
+export const Label = (props: any) => props?.children ?? null;
+export const Separator = (props: any) => null;
+export const Portal = (props: any) => props?.children ?? null;
+export const Overlay = (props: any) => props?.children ?? null;
+export const Title = (props: any) => props?.children ?? null;
+export const Description = (props: any) => props?.children ?? null;
+export const Close = (props: any) => props?.children ?? null;
+export const Header = (props: any) => props?.children ?? null;
+export const Footer = (props: any) => props?.children ?? null;
+export const Viewport = (props: any) => props?.children ?? null;
+export const Indicator = (props: any) => null;
+export const Thumb = (props: any) => null;
+export const Track = (props: any) => props?.children ?? null;
+export const Range = (props: any) => null;
+export default {};

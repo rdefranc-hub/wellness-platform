@@ -1,5 +1,6 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+/* Tailwind imports commented out - requires tailwindcss package */
+/* @import "tailwindcss"; */
+/* @import "tw-animate-css"; */
 
 @custom-variant dark (&:is(.dark *));
 
