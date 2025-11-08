@@ -207,9 +207,14 @@ Este projeto está sob a licença MIT.
 ## 📞 Suporte
 
 Para dúvidas ou suporte, entre em contato através de:
+
+
 - Email: contato@wellness.com
 - Website: https://wellness.com
 
 ---
 
 Desenvolvido com ❤️ para promover bem-estar através da tecnologia.
+
+TESTE IA AUTO-FIX
+
