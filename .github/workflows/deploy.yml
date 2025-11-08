@@ -1,6 +1,10 @@
 name: Deploy Wellness (HostGator FTP)
 
 on:
+  # Trigger automático no push para main
+  push:
+    branches:
+      - main
   # Habilita o botão "Run workflow" em Actions
   workflow_dispatch:
 
