@@ -1,0 +1,39 @@
+name: build-and-self-heal
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  self-heal:
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci || true
+      - run: node scripts/self-heal-shims.mjs
+      - uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore(self-heal): add shims and update vite aliases"
+          branch: bot/self-heal-shims
+          title: "chore(self-heal): add shims and update vite aliases"
+          body: "Auto fix for build errors (missing shims/aliases)."
