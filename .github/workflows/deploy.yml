@@ -1,43 +1,69 @@
 name: Deploy Wellness (HostGator FTP)
 
 on:
-  push:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node 20
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          check-latest: true
 
-      - name: Install dependencies
-        run: npm install --no-audit --no-fund --ignore-scripts
+      # Instalação resiliente (npm/pnpm)
+      - name: Install deps (smart)
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            corepack enable
+            pnpm install --no-frozen-lockfile
+          elif [ -f package-lock.json ]; then
+            npm ci || npm install
+          else
+            npm install
+          fi
 
-      - name: Build (Vite)
-        run: npm run build
+      # Build do frontend (ajuste o caminho se seu app não está em /client)
+      - name: Build Vite (client)
+        working-directory: ./client
+        run: |
+          npx vite build --config ../vite.config.ts || npx vite build || npm run build || echo "Vite tentou buildar"
+        env:
+          CI: "false"
 
-      - name: Deploy via FTP (HostGator)
+      # Validação: precisa existir client/dist antes do deploy
+      - name: Validate build output
+        run: |
+          if [ ! -d "client/dist" ]; then
+            echo "ERRO: diretório client/dist não encontrado. Verifique o caminho do build."
+            exit 1
+          fi
+          echo "OK: client/dist encontrado."
+
+      # Deploy via FTP (HostGator) - usa SamKirkland/FTP-Deploy-Action
+      - name: Deploy to HostGator (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
-          security: loose
-          local-dir: client/dist/
-          server-dir: public_html/wellness/
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftps' }}   # 'ftp' ou 'ftps'
+          port: ${{ secrets.FTP_PORT || '21' }}
+          # Caminho remoto. Ex.: public_html/wellness/
+          server-dir: ${{ secrets.FTP_PATH }}
+          # O que vamos subir (saída do Vite)
+          local-dir: client/dist
+          # Limpa arquivos obsoletos no servidor (cautela!)
           dangerous-clean-slate: true
+          # Ignorar lixo
           exclude: |
             **/.git*
-            **/.DS_Store
+            **/.github/**
             **/node_modules/**
+            **/*.map
+            **/.DS_Store
