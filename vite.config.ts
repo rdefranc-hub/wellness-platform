@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// Root is client/ so builds go to client/dist when outDir is 'dist'.
-// base is set so final site works at https://clubedavida.online/wellness/
+// Root é client/ e o build vai para client/dist
+// Base /wellness/ garante que os assets sejam servidos corretamente no HostGator
 
 export default defineConfig({
   root: path.resolve(__dirname, 'client'),
@@ -11,13 +11,13 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@shared': path.resolve(__dirname, 'shared'),
+      '@': path.resolve(__dirname, 'client/src'),
       '@lib': path.resolve(__dirname, 'client/src/lib'),
-      '@lib/shims': path.resolve(__dirname, 'client/src/lib/shims'),
+      '@shims': path.resolve(__dirname, 'client/src/lib/shims'),
     },
   },
   build: {
-    outDir: 'dist',
+    outDir: path.resolve(__dirname, 'client/dist'),
     emptyOutDir: true,
   },
 });
