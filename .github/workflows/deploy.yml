@@ -70,5 +70,5 @@ jobs:
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
           local-dir: ${{ steps.dist.outputs.dir }}/
-          # server-dir: /               # <- ajuste se precisar publicar em uma subpasta do FTP
+          server-dir: /public_html/   # Deploy para public_html (raiz do site)
           # dangerous-clean-slate: true # <- habilite se quiser limpar alvo antes (cuidado!)
