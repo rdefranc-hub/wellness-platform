@@ -1,7 +1,6 @@
-// Stub para permitir build sem backend TRPC.
-// Atende imports como "@/lib/trpc".
-export const createTRPCReact = () => ({});
-export const createTRPCProxyClient = () => ({});
-export const httpBatchLink = (_: any) => (_i: any) => _i;
+// client/src/lib/trpc.ts
+// Reexporta o shim já criado para TRPC.
+// Assim, qualquer import "@/lib/trpc" encontra esse arquivo.
 
-export default {};
+export * from './shims/trpc';
+export { default } from './shims/trpc';
