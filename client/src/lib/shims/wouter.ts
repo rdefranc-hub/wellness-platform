@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-export const Link = (props: any) => React.createElement('a', { href: props.href }, props?.children);
+export const Link = (props: any) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.history.pushState({}, '', props.href);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+  
+  return React.createElement('a', { 
+    href: props.href,
+    onClick: handleClick,
+    className: props.className,
+    ...props
+  }, props?.children);
+};
 
 export const Route = (props: any) => {
+  const [currentPath] = useLocation();
+  const matches = matchPath(props.path, currentPath);
+  
+  if (!matches) return null;
+  
   if (props.component) {
     return React.createElement(props.component);
   }
@@ -12,11 +30,70 @@ export const Route = (props: any) => {
 export const Router = (props: any) => (props?.children ?? null);
 
 export const Switch = (props: any) => {
-  // Renderizar apenas o primeiro Route filho
+  const [currentPath] = useLocation();
   const children = React.Children.toArray(props.children);
-  return children[0] || null;
+  
+  // Find the first matching route
+  for (const child of children) {
+    const childElement = child as React.ReactElement;
+    const path = childElement.props?.path;
+    
+    // If no path specified, it's a fallback route
+    if (!path) {
+      return child;
+    }
+    
+    // Check if path matches current location
+    if (matchPath(path, currentPath)) {
+      return child;
+    }
+  }
+  
+  // Return last child as fallback (NotFound)
+  return children[children.length - 1] || null;
 };
 
-export const useLocation = () => ['/', () => {}] as const;
+export const useLocation = (): [string, (path: string) => void] => {
+  const [location, setLocation] = useState(window.location.pathname);
+  
+  useEffect(() => {
+    const handlePopState = () => {
+      setLocation(window.location.pathname);
+    };
+    
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+  
+  const navigate = (path: string) => {
+    window.history.pushState({}, '', path);
+    setLocation(path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+  
+  return [location, navigate];
+};
+
+// Helper function to match paths
+function matchPath(pattern: string | undefined, path: string): boolean {
+  if (!pattern) return false;
+  
+  // Exact match
+  if (pattern === path) return true;
+  
+  // Root path only matches exactly
+  if (pattern === '/' && path !== '/') return false;
+  
+  // Pattern matching with wildcards
+  const patternParts = pattern.split('/').filter(Boolean);
+  const pathParts = path.split('/').filter(Boolean);
+  
+  if (patternParts.length !== pathParts.length) return false;
+  
+  return patternParts.every((part, i) => {
+    if (part.startsWith(':')) return true; // Dynamic segment
+    return part === pathParts[i];
+  });
+}
 
 export default {};

@@ -1,10 +1,10 @@
 // i18next shim — carrega traduções reais de pt-BR.json
 import ptBR from '../../locales/pt-BR.json';
 
-type TFunc = (key: string, options?: any) => string;
+type TFunc = (key: string, options?: any) => any;
 
 // Função para buscar valor aninhado no objeto de traduções
-const getNestedValue = (obj: any, path: string): string => {
+const getNestedValue = (obj: any, path: string): any => {
   const keys = path.split('.');
   let value = obj;
   for (const key of keys) {
@@ -14,20 +14,27 @@ const getNestedValue = (obj: any, path: string): string => {
       return path; // Retorna a chave se não encontrar
     }
   }
-  return typeof value === 'string' ? value : path;
+  return value;
 };
 
 const t: TFunc = (key, options) => {
   let translation = getNestedValue(ptBR, key);
   
+  // Se returnObjects for true, retorna o objeto/array diretamente
+  if (options?.returnObjects) {
+    return translation;
+  }
+  
   // Suporte para interpolação {{variable}}
   if (options && typeof translation === 'string') {
     Object.keys(options).forEach(optKey => {
-      translation = translation.replace(`{{${optKey}}}`, options[optKey]);
+      if (optKey !== 'returnObjects') {
+        translation = translation.replace(`{{${optKey}}}`, options[optKey]);
+      }
     });
   }
   
-  return translation;
+  return typeof translation === 'string' ? translation : key;
 };
 
 const i18n = {
