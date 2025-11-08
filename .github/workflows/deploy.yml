@@ -1,10 +1,54 @@
-      # Build do frontend a partir da RAIZ (usa vite.config.ts na raiz)
+name: Deploy Wellness (HostGator FTP)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+
+      - name: Install deps (smart)
+        run: |
+          if [ -f package-lock.json ]; then npm ci || npm install; fi
+          if [ -f client/package.json ] && [ -f client/package-lock.json ]; then (cd client && npm ci || npm install); fi
+
+      # Build a partir da RAIZ (o seu vite.config.ts na raiz já aponta root=client)
       - name: Build Vite (root)
         run: |
           npx vite build || npm run build
-          echo "PÓS-BUILD: listagens para conferência"
-          ls -la
-          ls -la client || true
-          ls -la client/dist || true
         env:
           CI: "false"
+
+      - name: Validate build output
+        run: |
+          echo "Listando pastas para conferência:"
+          ls -la
+          ls -la client || true
+          if [ ! -d "client/dist" ]; then
+            echo "ERRO: diretório client/dist não encontrado. Verifique o build."
+            exit 1
+          fi
+          echo "OK: client/dist existe."
+
+      - name: Deploy to HostGator (FTP)
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: client/dist
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          dangerous-clean-slate: false
