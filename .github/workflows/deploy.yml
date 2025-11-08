@@ -1,6 +1,7 @@
 name: Deploy Wellness (HostGator FTP)
 
 on:
+  # Habilita o botão "Run workflow" em Actions
   workflow_dispatch:
 
 jobs:
@@ -11,44 +12,60 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use Node 20
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: |
-            package-lock.json
-            client/package-lock.json
 
-      - name: Install deps (smart)
+      # Detecta automaticamente se o projeto está na raiz ou em client/
+      - name: Detect project dir (root or client/)
+        id: proj
+        shell: bash
         run: |
-          if [ -f package-lock.json ]; then npm ci || npm install; fi
-          if [ -f client/package.json ] && [ -f client/package-lock.json ]; then (cd client && npm ci || npm install); fi
+          if [ -f "client/package.json" ]; then
+            echo "workdir=client" >> "$GITHUB_OUTPUT"
+          else
+            echo "workdir=." >> "$GITHUB_OUTPUT"
+          fi
 
-      # Build a partir da RAIZ (o seu vite.config.ts na raiz já aponta root=client)
-      - name: Build Vite (root)
+      - name: Install dependencies
+        working-directory: ${{ steps.proj.outputs.workdir }}
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm i
+          fi
+
+      - name: Build (Vite or npm run build)
+        working-directory: ${{ steps.proj.outputs.workdir }}
+        shell: bash
         run: |
           npx vite build || npm run build
-        env:
-          CI: "false"
 
-      - name: Validate build output
+      - name: Resolve dist path
+        id: dist
+        shell: bash
         run: |
-          echo "Listando pastas para conferência:"
-          ls -la
-          ls -la client || true
-          if [ ! -d "client/dist" ]; then
-            echo "ERRO: diretório client/dist não encontrado. Verifique o build."
+          DIST="${{ steps.proj.outputs.workdir }}/dist"
+          echo "Procurando: $DIST"
+          if [ -d "$DIST" ]; then
+            echo "dir=$DIST" >> "$GITHUB_OUTPUT"
+            echo "OK: build encontrado em $DIST"
+          else
+            echo "ERROR: diretório 'dist' não encontrado em $DIST"
+            echo "Listagem do diretório:"
+            ls -la "${{ steps.proj.outputs.workdir }}" || true
             exit 1
           fi
-          echo "OK: client/dist existe."
 
-- name: Deploy to HostGator (FTP)
-  uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-  with:
-    server: ${{ secrets.FTP_HOST }}
-    username: ${{ secrets.FTP_USER }}
-    password: ${{ secrets.FTP_PASS }}
-    local-dir: client/dist
-    dangerous-clean-slate: true
-
+      - name: Deploy to HostGator (FTP)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:   ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          local-dir: ${{ steps.dist.outputs.dir }}
+          # server-dir: /               # <- ajuste se precisar publicar em uma subpasta do FTP
+          # dangerous-clean-slate: true # <- habilite se quiser limpar alvo antes (cuidado!)
