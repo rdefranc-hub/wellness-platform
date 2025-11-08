@@ -14,9 +14,11 @@ resolve: {
     '@': path.resolve(__dirname, 'client/src'),
     '@lib': path.resolve(__dirname, 'client/src/lib'),
     '@shims': path.resolve(__dirname, 'client/src/lib/shims'),
-    '@shared': path.resolve(__dirname, 'shared'), // <-- ADICIONE ESTA LINHA
+    '@shared': path.resolve(__dirname, 'shared'),
+    '@tanstack/react-query': path.resolve(__dirname, 'client/src/lib/shims/react-query.ts'), // <-- ADICIONE
   },
 },
+
   build: {
     outDir: path.resolve(__dirname, 'client/dist'),
     emptyOutDir: true,
