@@ -17,12 +17,9 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  // Wellness Platform Routers
+  chat: require("./routers/chat").chatRouter,
+  avatars: require("./routers/avatars").avatarsRouter,
 });
 
 export type AppRouter = typeof appRouter;
