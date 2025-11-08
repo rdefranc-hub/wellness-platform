@@ -1,18 +1,7 @@
-// @ts-nocheck
+// Stub para permitir build sem backend TRPC.
+// Atende imports como "@/lib/trpc".
+export const createTRPCReact = () => ({});
+export const createTRPCProxyClient = () => ({});
+export const httpBatchLink = (_: any) => (_i: any) => _i;
 
-import { createTRPCReact } from '@trpc/react-query';
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import superjson from 'superjson';
-
-export type AppRouter = any;
-
-export const trpc = createTRPCReact<AppRouter>();
-
-export const trpcClient = createTRPCClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: '/api/trpc'
-    })
-  ],
-  transformer: superjson
-});
+export default {};
