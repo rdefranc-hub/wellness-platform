@@ -1,7 +1,9 @@
 // client/src/lib/shims/react-i18next.ts
+import i18n from './i18n';
+
 export const useTranslation = () => ({
-  t: (key: string, _opts?: any) => key,
-  i18n: {} as any,
+  t: (key: string, opts?: any) => i18n.t(key, opts),
+  i18n: i18n as any,
 });
 
 export const Trans = (props: any) => (props?.children ?? null);
