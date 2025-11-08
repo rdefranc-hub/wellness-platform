@@ -1,81 +1,50 @@
 name: build-and-self-heal
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Install
-        run: |
-          if [ -f pnpm-lock.yaml ]; then
-            corepack enable
-            pnpm install --no-frozen-lockfile
-          else
-            npm ci || npm install
-          fi
-
-      - name: Build
-        run: |
-          if [ -f pnpm-lock.yaml ]; then
-            pnpm run build || exit 1
-          else
-            npm run build || exit 1
-          fi
+      - run: npm ci
+      - run: npm run build
 
   self-heal:
     needs: build
-    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install (minimal)
-        run: |
-          if [ -f pnpm-lock.yaml ]; then
-            corepack enable
-            pnpm install --no-frozen-lockfile
-          else
-            npm ci || npm install
-          fi
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Run self-heal automation (correct path)
-        run: |
-          echo "🩹 Running self-heal..."
-          node scripts/self-heal-shims.mjs
+      - name: Run self-heal automation
+        run: node scripts/self-heal-shims.mjs
 
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B bot/self-heal-shims
-          git add -A
-          git commit -m "chore(self-heal): add shims and update Vite aliases" || echo "No changes to commit"
-          git push -f origin bot/self-heal-shims || echo "Branch already exists"
+          git checkout -b bot/self-heal-shims || git checkout bot/self-heal-shims
+          git add .
+          git commit -m "chore(ci): automated self-heal fixes" || echo "No changes to commit"
+          git push origin bot/self-heal-shims
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: bot/self-heal-shims
-          title: "chore(self-heal): add shims and update Vite aliases"
-          body: |
-            🤖 Auto PR criado pelo workflow após falha no build.
-            Gera/atualiza shims em client/src/lib/shims e ajusta aliases no Vite.
+          base: main
+          title: "chore(ci): automated self-heal fixes"
+          body: "Auto-heal executado automaticamente pelo GitHub Actions."
