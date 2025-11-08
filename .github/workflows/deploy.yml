@@ -69,6 +69,6 @@ jobs:
           server:   ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASS }}
-          local-dir: ${{ steps.dist.outputs.dir }}
+          local-dir: ${{ steps.dist.outputs.dir }}/
           # server-dir: /               # <- ajuste se precisar publicar em uma subpasta do FTP
           # dangerous-clean-slate: true # <- habilite se quiser limpar alvo antes (cuidado!)
