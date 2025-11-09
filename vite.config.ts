@@ -39,8 +39,14 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Adicionar timestamp ao hash para forçar cache busting
-        entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
-        chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+        entryFileNames: (chunkInfo) => {
+          const timestamp = Date.now();
+          return `assets/[name]-[hash]-${timestamp}.js`;
+        },
+        chunkFileNames: (chunkInfo) => {
+          const timestamp = Date.now();
+          return `assets/[name]-[hash]-${timestamp}.js`;
+        },
         assetFileNames: `assets/[name]-[hash].[ext]`,
       },
     },
