@@ -49,6 +49,8 @@ const router = createHashRouter([
 ]);
 
 function App() {
+  console.log('[WELLNESS] App component rendering...');
+  console.log('[WELLNESS] Router:', router);
   return <RouterProvider router={router} />;
 }
 

@@ -52,6 +52,9 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+console.log('[WELLNESS] Initializing React app...');
+console.log('[WELLNESS] Root element:', document.getElementById("root"));
+
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>
