@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
+// Use hash-based routing for compatibility with static hosting
+const getHashPath = () => {
+  const hash = window.location.hash;
+  return hash ? hash.slice(1) : '/'; // Remove # and default to /
+};
+
 export const Link = (props: any) => {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.history.pushState({}, '', props.href);
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.location.hash = `#${props.href}`;
   };
   
   return React.createElement('a', { 
-    href: props.href,
+    href: `#${props.href}`,
     onClick: handleClick,
     className: props.className,
     ...props
@@ -54,21 +59,19 @@ export const Switch = (props: any) => {
 };
 
 export const useLocation = (): [string, (path: string) => void] => {
-  const [location, setLocation] = useState(window.location.pathname);
+  const [location, setLocation] = useState(getHashPath());
   
   useEffect(() => {
-    const handlePopState = () => {
-      setLocation(window.location.pathname);
+    const handleHashChange = () => {
+      setLocation(getHashPath());
     };
     
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
   
   const navigate = (path: string) => {
-    window.history.pushState({}, '', path);
-    setLocation(path);
-    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.location.hash = `#${path}`;
   };
   
   return [location, navigate];
@@ -78,8 +81,6 @@ export const useParams = (): Record<string, string> => {
   const [location] = useLocation();
   const pathParts = location.split('/').filter(Boolean);
   
-  // Encontrar a rota correspondente no App
-  // Para simplificar, vamos extrair parâmetros dinamicamente
   const params: Record<string, string> = {};
   
   // Se a URL é /chat/:avatarId, extrair avatarId
