@@ -1,6 +1,15 @@
-// client/src/lib/trpc.ts
-// Reexporta o shim já criado para TRPC.
-// Assim, qualquer import "@/lib/trpc" encontra esse arquivo.
+import { createTRPCReact } from '@trpc/react-query';
+import { httpBatchLink } from '@trpc/client';
+import type { AppRouter } from '../../../server/index';
 
-export * from './shims/trpc';
-export { default } from './shims/trpc';
+export const trpc = createTRPCReact<AppRouter>();
+
+export function createTRPCClient() {
+  return trpc.createClient({
+    links: [
+      httpBatchLink({
+        url: '/api/trpc',
+      }),
+    ],
+  });
+}

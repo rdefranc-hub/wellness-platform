@@ -15,7 +15,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
   const { t } = useTranslation();
-  const [location] = useLocation();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggleTheme } = useUIStore();
   const { user, clearUser } = useUserStore();
@@ -49,7 +49,7 @@ export default function Header() {
               key={item.path}
               href={item.path}
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                location === item.path
+                location.pathname === item.path
                   ? 'text-foreground'
                   : 'text-muted-foreground'
               }`}
@@ -123,7 +123,7 @@ export default function Header() {
                 key={item.path}
                 href={item.path}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  location === item.path
+                  location.pathname === item.path
                     ? 'text-foreground'
                     : 'text-muted-foreground'
                 }`}
