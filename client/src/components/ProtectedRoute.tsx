@@ -1,6 +1,6 @@
 import { useUserStore } from '@/stores/useStore';
 import { ReactNode, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -8,13 +8,13 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { user } = useUserStore();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      setLocation('/login');
+      navigate('/login');
     }
-  }, [user, setLocation]);
+  }, [user, navigate]);
 
   if (!user) {
     return null;
