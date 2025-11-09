@@ -59,9 +59,12 @@ export const Switch = (props: any) => {
 };
 
 export const useLocation = (): [string, (path: string) => void] => {
-  const [location, setLocation] = useState(getHashPath());
+  const [location, setLocation] = useState(() => getHashPath());
   
   useEffect(() => {
+    // Forçar atualização na montagem
+    setLocation(getHashPath());
+    
     const handleHashChange = () => {
       setLocation(getHashPath());
     };
