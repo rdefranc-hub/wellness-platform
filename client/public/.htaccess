@@ -9,3 +9,22 @@
   # Rewrite everything else to index.html to allow html5 state links
   RewriteRule ^ index.html [L]
 </IfModule>
+
+# Disable caching for HTML files to ensure fresh content
+<FilesMatch "\.(html|htm)$">
+  FileETag None
+  Header unset ETag
+  Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+  Header set Pragma "no-cache"
+  Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+</FilesMatch>
+
+# Cache static assets for 1 year
+<FilesMatch "\.(jpg|jpeg|png|gif|svg|ico|webp|woff|woff2|ttf|eot|otf)$">
+  Header set Cache-Control "max-age=31536000, public, immutable"
+</FilesMatch>
+
+# Cache JS and CSS for 1 hour (allows quick updates)
+<FilesMatch "\.(js|css)$">
+  Header set Cache-Control "max-age=3600, public"
+</FilesMatch>
