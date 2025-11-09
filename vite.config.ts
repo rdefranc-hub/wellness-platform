@@ -41,7 +41,7 @@ export default defineConfig({
         // Adicionar timestamp ao hash para forçar cache busting
         entryFileNames: (chunkInfo) => {
           const timestamp = Date.now();
-          return `assets/[name]-[hash]-${timestamp}.js`;
+          return `assets/[name]-FINAL-${timestamp}.js`;
         },
         chunkFileNames: (chunkInfo) => {
           const timestamp = Date.now();

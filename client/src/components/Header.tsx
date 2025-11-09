@@ -35,7 +35,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           {APP_LOGO && (
             <img src={APP_LOGO} alt={APP_TITLE} className="h-8 w-8 object-contain" />
           )}
@@ -47,7 +47,7 @@ export default function Header() {
           {navItems.map((item) => (
             <Link
               key={item.path}
-              href={item.path}
+              to={item.path}
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 location.pathname === item.path
                   ? 'text-foreground'
@@ -85,7 +85,7 @@ export default function Header() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard">{t('header.myAccount')}</Link>
+                  <Link to="/dashboard">{t('header.myAccount')}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout}>
                   {t('header.logout')}
@@ -94,7 +94,7 @@ export default function Header() {
             </DropdownMenu>
           ) : (
             <Button asChild>
-              <Link href="/login">{t('header.login')}</Link>
+              <Link to="/login">{t('header.login')}</Link>
             </Button>
           )}
         </div>
@@ -121,7 +121,7 @@ export default function Header() {
             {navItems.map((item) => (
               <Link
                 key={item.path}
-                href={item.path}
+                to={item.path}
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   location.pathname === item.path
                     ? 'text-foreground'
@@ -160,7 +160,7 @@ export default function Header() {
                     asChild
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <Link href="/dashboard">{t('header.myAccount')}</Link>
+                    <Link to="/dashboard">{t('header.myAccount')}</Link>
                   </Button>
                   <Button
                     variant="ghost"
@@ -181,7 +181,7 @@ export default function Header() {
                   asChild
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <Link href="/login">{t('header.login')}</Link>
+                  <Link to="/login">{t('header.login')}</Link>
                 </Button>
               )}
             </div>

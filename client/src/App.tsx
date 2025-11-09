@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { createHashRouter, RouterProvider, Outlet } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -14,44 +14,35 @@ import Chat from "./pages/Chat";
 import NotFound from "./pages/NotFound";
 import './lib/i18n';
 
-function RootLayout() {
+function App() {
+  console.log('[WELLNESS] App component rendering with HashRouter...');
+  
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light" switchable>
         <TooltipProvider>
           <Toaster />
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">
-              <Outlet />
-            </main>
-            <Footer />
-          </div>
+          <HashRouter>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/especialidades" element={<Especialidades />} />
+                  <Route path="/assinaturas" element={<Assinaturas />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/chat/:avatarId" element={<Chat />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </HashRouter>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );
-}
-
-const router = createHashRouter([
-  {
-    element: <RootLayout />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "/especialidades", element: <Especialidades /> },
-      { path: "/assinaturas", element: <Assinaturas /> },
-      { path: "/login", element: <Login /> },
-      { path: "/dashboard", element: <Dashboard /> },
-      { path: "/chat/:avatarId", element: <Chat /> },
-      { path: "*", element: <NotFound /> },
-    ],
-  },
-]);
-
-function App() {
-  console.log('[WELLNESS] App component rendering...');
-  console.log('[WELLNESS] Router:', router);
-  return <RouterProvider router={router} />;
 }
 
 export default App;
