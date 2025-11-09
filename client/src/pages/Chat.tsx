@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
