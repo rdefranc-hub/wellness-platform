@@ -12,7 +12,7 @@ import { usePlanStore, useUserStore } from '@/stores/useStore';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 function DashboardContent() {
   const { t } = useTranslation();

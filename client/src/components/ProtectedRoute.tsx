@@ -1,6 +1,6 @@
 import { useUserStore } from '@/stores/useStore';
 import { ReactNode, useEffect } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
   children: ReactNode;

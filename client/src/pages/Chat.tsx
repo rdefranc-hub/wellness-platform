@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useParams, useLocation } from 'wouter';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -22,7 +22,7 @@ interface Message {
 
 function ChatContent() {
   const params = useParams();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
   const avatarId = parseInt(params.avatarId || '0');
   
   const [sessionId, setSessionId] = useState<number | null>(null);
@@ -125,7 +125,7 @@ function ChatContent() {
     try {
       await endSessionMutation.mutateAsync({ sessionId });
       toast.success('Sessão encerrada!');
-      setLocation('/dashboard');
+      navigate('/dashboard');
     } catch (error: any) {
       toast.error(`Erro ao encerrar sessão: ${error.message}`);
     }
@@ -174,7 +174,7 @@ function ChatContent() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => setLocation('/dashboard')}
+                    onClick={() => navigate('/dashboard')}
                   >
                     <ArrowLeft className="h-5 w-5" />
                   </Button>

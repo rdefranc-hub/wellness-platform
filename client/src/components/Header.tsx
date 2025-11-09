@@ -11,7 +11,7 @@ import { useUserStore } from '@/stores/useStore';
 import { Menu, Moon, Sun, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'wouter';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
   const { t } = useTranslation();

@@ -5,17 +5,17 @@ import { checkout } from '@/services/stripe';
 import { useUserStore } from '@/stores/useStore';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'wouter';
+import { useNavigate } from 'react-router-dom';
 
 export default function Assinaturas() {
   const { t } = useTranslation();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
   const { user } = useUserStore();
 
   const handleSubscribe = async (planId: string, planName: string) => {
     if (!user) {
       toast.info('Faça login para assinar um plano');
-      setLocation('/login');
+      navigate('/login');
       return;
     }
 

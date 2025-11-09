@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from 'wouter';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const allSpecialties = [
@@ -91,7 +91,7 @@ const allTags = Array.from(
 
 export default function Especialidades() {
   const { t } = useTranslation();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
   const { user } = useUserStore();
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
@@ -102,9 +102,9 @@ export default function Especialidades() {
   const handleSelectAvatar = (avatarId: number, specialtyName: string) => {
     if (!user) {
       toast.info('Faça login para selecionar um avatar');
-      setLocation('/login');
+      navigate('/login');
     } else {
-      setLocation(`/chat/${avatarId}`);
+      navigate(`/chat/${avatarId}`);
     }
   };
 

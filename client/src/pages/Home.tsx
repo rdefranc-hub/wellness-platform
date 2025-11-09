@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Heart, Sparkles, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const { t } = useTranslation();

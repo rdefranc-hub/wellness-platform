@@ -10,11 +10,11 @@ import { usePlanStore, useUserStore } from '@/stores/useStore';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { useLocation } from 'wouter';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const { t } = useTranslation();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
   const { setUser } = useUserStore();
   const { setPlan } = usePlanStore();
 
@@ -77,7 +77,7 @@ export default function Login() {
       });
 
       toast.success('Login realizado com sucesso!');
-      setLocation('/dashboard');
+      navigate('/dashboard');
     } catch (error) {
       toast.error('Erro ao fazer login. Verifique suas credenciais.');
       console.error(error);
@@ -137,7 +137,7 @@ export default function Login() {
       });
 
       toast.success('Conta criada com sucesso!');
-      setLocation('/dashboard');
+      navigate('/dashboard');
     } catch (error) {
       toast.error('Erro ao criar conta. Tente novamente.');
       console.error(error);

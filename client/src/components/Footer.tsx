@@ -1,6 +1,6 @@
 import { APP_TITLE } from '@/const';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'wouter';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   const { t } = useTranslation();
