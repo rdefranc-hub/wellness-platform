@@ -9,6 +9,7 @@ import Especialidades from "./pages/Especialidades";
 import Assinaturas from "./pages/Assinaturas";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Chat from "./pages/Chat";
 import './lib/i18n';
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/assinaturas" component={Assinaturas} />
       <Route path="/login" component={Login} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/chat/:avatarId" component={Chat} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

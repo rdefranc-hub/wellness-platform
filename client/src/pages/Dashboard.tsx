@@ -42,22 +42,9 @@ function DashboardContent() {
     loadData();
   }, [t]);
 
-  const handleAttend = async (avatarId: string, avatarName: string) => {
-    if (!isAvatarApiConfigured()) {
-      toast.error(t('errors.configMissing', { variable: 'VITE_AVATAR_API_URL' }));
-      return;
-    }
-
-    try {
-      toast.loading(`Conectando com ${avatarName}...`);
-      const session = await apiService.startAtendimento(avatarId);
-      toast.success(`Sessão iniciada! ID: ${session.sessionId}`);
-      // Aqui você redirecionaria para a interface do avatar
-      console.log('Session URL:', session.url);
-    } catch (error) {
-      toast.error('Erro ao iniciar atendimento');
-      console.error(error);
-    }
+  const handleAttend = (avatarId: string) => {
+    // Redirecionar para página de chat
+    window.location.href = `/chat/${avatarId}`;
   };
 
   const planTierLabel = {
@@ -163,7 +150,7 @@ function DashboardContent() {
                     description={avatar.description}
                     imageUrl={avatar.imageUrl}
                     available={avatar.available}
-                    onAttend={() => handleAttend(avatar.id, avatar.name)}
+                    onAttend={() => handleAttend(avatar.id)}
                   />
                 ))}
               </div>

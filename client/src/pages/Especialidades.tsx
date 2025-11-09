@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 const allSpecialties = [
   {
     id: 'psicologia',
+    avatarId: 1,
     name: 'Psicologia',
     description: 'Suporte emocional e terapia cognitivo-comportamental',
     icon: Brain,
@@ -28,6 +29,7 @@ const allSpecialties = [
   },
   {
     id: 'nutricao',
+    avatarId: 2,
     name: 'Nutrição',
     description: 'Orientação nutricional personalizada para seus objetivos',
     icon: Utensils,
@@ -35,6 +37,7 @@ const allSpecialties = [
   },
   {
     id: 'yoga',
+    avatarId: 3,
     name: 'Yoga & Meditação',
     description: 'Práticas de bem-estar, mindfulness e equilíbrio',
     icon: Sparkles,
@@ -42,6 +45,7 @@ const allSpecialties = [
   },
   {
     id: 'coaching',
+    avatarId: 4,
     name: 'Coaching',
     description: 'Desenvolvimento pessoal e profissional',
     icon: Users,
@@ -49,6 +53,7 @@ const allSpecialties = [
   },
   {
     id: 'fitness',
+    avatarId: 5,
     name: 'Fitness',
     description: 'Treinos personalizados e acompanhamento físico',
     icon: Dumbbell,
@@ -56,6 +61,7 @@ const allSpecialties = [
   },
   {
     id: 'cardiologia',
+    avatarId: 6,
     name: 'Cardiologia',
     description: 'Orientação para saúde cardiovascular',
     icon: Heart,
@@ -63,6 +69,7 @@ const allSpecialties = [
   },
   {
     id: 'fisioterapia',
+    avatarId: 7,
     name: 'Fisioterapia',
     description: 'Reabilitação e prevenção de lesões',
     icon: Activity,
@@ -70,6 +77,7 @@ const allSpecialties = [
   },
   {
     id: 'respiracao',
+    avatarId: 8,
     name: 'Técnicas de Respiração',
     description: 'Exercícios respiratórios para relaxamento e foco',
     icon: Wind,
@@ -91,13 +99,12 @@ export default function Especialidades() {
     ? allSpecialties.filter((s) => s.tags.includes(selectedTag))
     : allSpecialties;
 
-  const handleSelectAvatar = (specialtyName: string) => {
+  const handleSelectAvatar = (avatarId: number, specialtyName: string) => {
     if (!user) {
       toast.info('Faça login para selecionar um avatar');
       setLocation('/login');
     } else {
-      toast.success(`Redirecionando para ${specialtyName}...`);
-      setLocation('/dashboard');
+      setLocation(`/chat/${avatarId}`);
     }
   };
 
@@ -147,7 +154,7 @@ export default function Especialidades() {
                 description={specialty.description}
                 icon={specialty.icon}
                 tags={specialty.tags}
-                onSelect={() => handleSelectAvatar(specialty.name)}
+                onSelect={() => handleSelectAvatar(specialty.avatarId, specialty.name)}
               />
             ))}
           </div>

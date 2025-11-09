@@ -74,6 +74,25 @@ export const useLocation = (): [string, (path: string) => void] => {
   return [location, navigate];
 };
 
+export const useParams = (): Record<string, string> => {
+  const [location] = useLocation();
+  const pathParts = location.split('/').filter(Boolean);
+  
+  // Encontrar a rota correspondente no App
+  // Para simplificar, vamos extrair parâmetros dinamicamente
+  const params: Record<string, string> = {};
+  
+  // Se a URL é /chat/:avatarId, extrair avatarId
+  if (location.startsWith('/chat/')) {
+    const avatarId = pathParts[1];
+    if (avatarId) {
+      params.avatarId = avatarId;
+    }
+  }
+  
+  return params;
+};
+
 // Helper function to match paths
 function matchPath(pattern: string | undefined, path: string): boolean {
   if (!pattern) return false;
