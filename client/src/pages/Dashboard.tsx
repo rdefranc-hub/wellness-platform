@@ -12,10 +12,11 @@ import { usePlanStore, useUserStore } from '@/stores/useStore';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function DashboardContent() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user } = useUserStore();
   const { plan } = usePlanStore();
   const [avatares, setAvatares] = useState<any[]>([]);
@@ -43,8 +44,8 @@ function DashboardContent() {
   }, [t]);
 
   const handleAttend = (avatarId: string) => {
-    // Redirecionar para página de chat
-    window.location.href = `/chat/${avatarId}`;
+    // Redirecionar para página de chat usando React Router
+    navigate(`/chat/${avatarId}`);
   };
 
   const planTierLabel = {
