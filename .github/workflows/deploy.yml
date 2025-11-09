@@ -75,4 +75,7 @@ jobs:
           password: ${{ secrets.FTP_PASS }}
           local-dir: ${{ steps.dist.outputs.dir }}/
           server-dir: ../public_html/   # Deploy para public_html (raiz do domínio)
+          exclude: |
+            **/.git*
+            **/.git*/**
           # dangerous-clean-slate: true # <- habilite se quiser limpar alvo antes (cuidado!)
