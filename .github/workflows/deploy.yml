@@ -78,4 +78,4 @@ jobs:
           exclude: |
             **/.git*
             **/.git*/**
-          # dangerous-clean-slate: true # <- habilite se quiser limpar alvo antes (cuidado!)
+          dangerous-clean-slate: true # Limpar servidor antes do deploy
